@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b12">
+<title>HoK Token Shop</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#070a10;color:#fff;
+ font-family:Arial,sans-serif
+}
+button,input{font:inherit}
+button{cursor:pointer}
+
+.top{
+ position:sticky;top:0;z-index:10;
+ display:flex;justify-content:space-between;align-items:center;
+ padding:14px 18px;background:#0d121a;
+ border-bottom:1px solid #283244
+}
+.logo{font-weight:900;font-size:18px}
+.logo span{color:#9cff38}
+.support{
+ background:#171f2b;color:#fff;
+ border:1px solid #344157;border-radius:10px;
+ padding:9px 12px;font-weight:bold
+}
+
+main{max-width:850px;margin:auto}
+
+.hero{
+ padding:42px 20px 30px;
+ background:radial-gradient(circle at 85% 15%,
+ rgba(120,255,70,.18),transparent 42%)
+}
+.tag{
+ color:#9cff38;font-size:11px;
+ font-weight:900;letter-spacing:1.5px
+}
+h1{font-size:40px;line-height:1.03;margin:10px 0}
+h1 span{color:#9cff38}
+.hero p{color:#a7b1c0;line-height:1.5}
+
+section{padding:0 18px 25px}
+h2{font-size:21px}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px
+}
+
+.pkg{
+ background:#111722;
+ border:1px solid #283244;
+ border-radius:16px;
+ padding:17px
+}
+.pkg.selected{
+ border-color:#9cff38;
+ box-shadow:0 0 0 1px #9cff38
+}
+.tokens{font-size:19px;font-weight:900}
+.price{color:#9cff38;font-weight:900;margin:8px 0 14px}
+.pkg button,.place{
+ width:100%;border:0;border-radius:10px;
+ padding:12px;background:#9cff38;
+ color:#071006;font-weight:900
+}
+
+.checkout{
+ margin:5px 18px 35px;
+ background:#111722;
+ border:1px solid #283244;
+ border-radius:18px;
+ padding:20px
+}
+
+label{
+ display:block;color:#aeb8c7;
+ font-size:13px;margin:15px 0 7px
+}
+
+input{
+ width:100%;padding:14px;
+ background:#080c12;color:#fff;
+ border:1px solid #344157;
+ border-radius:10px;
+ outline:none
+}
+input:focus{border-color:#9cff38}
+
+.selected{
+ background:#080c12;color:#9cff38;
+ border-radius:10px;padding:14px
+}
+
+.payments{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px
+}
+
+.pay{
+ padding:13px;border-radius:10px;
+ background:#1a2331;color:#fff;
+ border:1px solid #344157;
+ font-weight:900
+}
+.pay.active{
+ background:#9cff38;color:#071006
+}
+
+.kbz{
+ margin-top:16px;
+ padding:15px;
+ background:#080c12;
+ border:1px solid #344157;
+ border-radius:12px
+}
+
+.kbz h3{margin-top:0}
+.account{
+ font-size:20px;
+ color:#9cff38;
+ font-weight:900;
+ padding:12px;
+ background:#111722;
+ border-radius:9px
+}
+
+.notice{
+ color:#9cff38;
+ text-align:center;
+ min-height:22px;
+ font-size:13px
+}
+
+.chat-modal{
+ position:fixed;inset:0;
+ background:rgba(0,0,0,.65);
+ display:flex;align-items:flex-end;
+ justify-content:center;
+ padding:15px;
+ z-index:50
+}
+.hidden{display:none}
+
+.chat{
+ width:min(390px,100%);
+ background:#111722;
+ border:1px solid #344157;
+ border-radius:16px;
+ overflow:hidden
+}
+
+.chat-head{
+ display:flex;justify-content:space-between;
+ padding:14px;
+ border-bottom:1px solid #293346
+}
+
+.close{
+ background:none;border:0;color:#fff;
+ font-size:24px
+}
+
+.messages{
+ height:240px;
+ padding:12px;
+ overflow:auto
+}
+
+.bubble{
+ width:max-content;
+ max-width:85%;
+ padding:10px;
+ border-radius:12px;
+ background:#202a39;
+ margin-bottom:8px
+}
+.me{
+ margin-left:auto;
+ background:#9cff38;
+ color:#071006
+}
+
+.chat-input{
+ display:flex;
+ gap:7px;
+ padding:9px
+}
+
+.chat-input input{padding:11px}
+
+.chat-input button{
+ border:0;border-radius:10px;
+ background:#9cff38;
+ padding:0 14px
+}
+
+footer{
+ text-align:center;
+ color:#687589;
+ padding:0 20px 30px;
+ font-size:12px
+}
+
+@media(max-width:520px){
+ .grid{grid-template-columns:1fr}
+ .payments{grid-template-columns:1fr}
+ h1{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+
+<div class="logo">
+⚡ <span>HoK</span> TOKEN SHOP
+</div>
+
+<button class="support" onclick="openChat()">
+💬 Support
+</button>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+<div class="tag">
+HONOR OF KINGS • ONLINE TOP-UP
+</div>
+
+<h1>
+Power up your<br>
+<span>HoK account.</span>
+</h1>
+
+<p>
+Choose your token package, enter your Game ID
+and complete your payment.
+</p>
+
+</section>
+
+
+<section>
+
+<h2>💎 Token Packages</h2>
+
+<div id="packages" class="grid"></div>
+
+</section>
+
+
+<section class="checkout">
+
+<h2>🧾 Checkout</h2>
+
+<label>HoK Game ID</label>
+
+<input
+ id="gameId"
+ placeholder="Enter your HoK Game ID"
+ inputmode="numeric">
+
+
+<label>Selected Package</label>
+
+<div id="selected" class="selected">
+Please select a package
+</div>
+
+
+<label>Payment Method</label>
+
+<div class="payments">
+
+<button
+ class="pay"
+ onclick="choosePayment(this,'KBZPay')">
+KBZPay
+</button>
+
+<button
+ class="pay"
+ onclick="choosePayment(this,'WaveMoney')">
+WaveMoney (WavePay)
+</button>
+
+</div>
+
+
+<div
+ id="kbzBox"
+ class="kbz hidden">
+
+<h3>💳 KBZPay Payment</h3>
+
+<p>ငွေလွှဲရန် KBZPay Account</p>
+
+<div class="account">
+09676544665
+</div>
+
+<p>
+အထက်ပါ KBZPay account သို့
+Order amount အတိုင်း ငွေလွှဲပါ။
+</p>
+
+<label>Transaction ID</label>
+
+<input
+ id="transaction"
+ placeholder="Enter KBZPay Transaction ID">
+
+<p>
+ငွေလွှဲပြီးပါက Transaction ID ထည့်ပြီး
+Submit Payment နှိပ်ပါ။
+</p>
+
+</div>
+
+
+<button
+ class="place"
+ onclick="placeOrder()">
+Submit Order
+</button>
+
+<p
+ id="message"
+ class="notice">
+</p>
+
+</section>
+
+</main>
+
+
+<footer>
+HoK Token Shop • Manual Payment Verification
+</footer>
+
+
+<!-- SUPPORT CHAT -->
+
+<div
+ id="chatModal"
+ class="chat-modal hidden">
+
+<div class="chat">
+
+<div class="chat-head">
+
+<strong>Customer Support</strong>
+
+<button
+ class="close"
+ onclick="closeChat()">×</button>
+
+</div>
+
+
+<div
+ id="messages"
+ class="messages">
+
+<div class="bubble">
+Hello! How can we help you?
+</div>
+
+</div>
+
+
+<div class="chat-input">
+
+<input
+ id="chatText"
+ placeholder="Type a message...">
+
+<button onclick="sendMessage()">
+➤
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   TOKEN PACKAGES
+========================= */
+
+const packages = [
+
+{
+ tokens:"80 Tokens",
+ price:"2,500 MMK"
+},
+
+{
+ tokens:"240 Tokens",
+ price:"7,000 MMK"
+},
+
+{
+ tokens:"500 Tokens",
+ price:"14,000 MMK"
+},
+
+{
+ tokens:"1,000 Tokens",
+ price:"27,000 MMK"
+},
+
+{
+ tokens:"2,500 Tokens",
+ price:"65,000 MMK"
+},
+
+{
+ tokens:"5,000 Tokens",
+ price:"125,000 MMK"
+}
+
+];
+
+
+let selectedPackage=null;
+let selectedPayment=null;
+
+
+/* =========================
+   DISPLAY PACKAGES
+========================= */
+
+const packageArea=
+document.getElementById("packages");
+
+
+packages.forEach(function(item,index){
+
+ const card=
+ document.createElement("div");
+
+ card.className="pkg";
+
+ card.innerHTML=`
+
+ <div style="font-size:25px">
+ 💎
+ </div>
+
+ <div class="tokens">
+ ${item.tokens}
+ </div>
+
+ <div class="price">
+ ${item.price}
+ </div>
+
+ <button
+ onclick="selectPackage(${index},this)">
+ Select Package
+ </button>
+
+ `;
+
+ packageArea.appendChild(card);
+
+});
+
+
+/* =========================
+   SELECT PACKAGE
+========================= */
+
+function selectPackage(index,button){
+
+ selectedPackage=
+ packages[index];
+
+ document
+ .querySelectorAll(".pkg")
+ .forEach(function(card){
+
+   card.classList.remove("selected");
+
+ });
+
+ button.parentElement
+ .classList.add("selected");
+
+ document.getElementById("selected")
+ .textContent=
+ selectedPackage.tokens+
+ " — "+
+ selectedPackage.price;
+
+ document.getElementById("message")
+ .textContent="";
+
+}
+
+
+/* =========================
+   PAYMENT METHOD
+========================= */
+
+function choosePayment(button,method){
+
+ document
+ .querySelectorAll(".pay")
+ .forEach(function(item){
+
+   item.classList.remove("active");
+
+ });
+
+ button.classList.add("active");
+
+ selectedPayment=method;
+
+ const kbz=
+ document.getElementById("kbzBox");
+
+ if(method==="KBZPay"){
+
+   kbz.classList.remove("hidden");
+
+ }else{
+
+   kbz.classList.add("hidden");
+
+ }
+
+}
+
+
+/* =========================
+   CREATE ORDER
+========================= */
+
+function placeOrder(){
+
+ const gameId=
+ document
+ .getElementById("gameId")
+ .value
+ .trim();
+
+ const transaction=
+ document
+ .getElementById("transaction")
+ .value
+ .trim();
+
+ const message=
+ document.getElementById("message");
+
+
+ if(!gameId){
+
+   message.textContent=
+   "Please enter your HoK Game ID.";
+
+   return;
+
+ }
+
+
+ if(!selectedPackage){
+
+   message.textContent=
+   "Please select a token package.";
+
+   return;
+
+ }
+
+
+ if(!selectedPayment){
+
+   message.textContent=
+   "Please select a payment method.";
+
+   return;
+
+ }
+
+
+ if(selectedPayment==="KBZPay" && !transaction){
+
+   message.textContent=
+   "Please enter your KBZPay Transaction ID.";
+
+   return;
+
+ }
+
+
+ const orderId=
+ "HOK-"+
+ Date.now()
+ .toString()
+ .slice(-8);
+
+
+ message.textContent=
+ "Order "+
+ orderId+
+ " submitted. Payment verification is pending.";
+
+}
+
+
+/* =========================
+   CUSTOMER SUPPORT
+========================= */
+
+function openChat(){
+
+ document
+ .getElementById("chatModal")
+ .classList
+ .remove("hidden");
+
+}
+
+
+function closeChat(){
+
+ document
+ .getElementById("chatModal")
+ .classList
+ .add("hidden");
+
+}
+
+
+function sendMessage(){
+
+ const input=
+ document.getElementById("chatText");
+
+ const text=
+ input.value.trim();
+
+ if(!text)return;
+
+
+ const bubble=
+ document.createElement("div");
+
+ bubble.className=
+ "bubble me";
+
+ bubble.textContent=
+ text;
+
+
+ document
+ .getElementById("messages")
+ .appendChild(bubble);
+
+
+ input.value="";
+
+
+ const messages=
+ document.getElementById("messages");
+
+ messages.scrollTop=
+ messages.scrollHeight;
+
+}
+
+</script>
+
+</body>
+</html>
