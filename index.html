@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BURME LAM TOKEN SHOP</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --dark: #1e1b4b;
+            --light: #312e81;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 450px;
+        }
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #4338ca;
+            background-color: #1e1b4b;
+            color: white;
+            box-sizing: border-box;
+        }
+        .payment-info {
+            background: #1e1b4b;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 5px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #f3f4f6;
+        }
+        .qr-container {
+            text-align: center;
+            margin-top: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: block;
+        }
+        .qr-image {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            border: none;
+            color: #1e1b4b;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #d97706; }
+        .c-service {
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #4338ca;
+            padding-top: 15px;
+        }
+        .c-service a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>BURME LAM TOKEN SHOP</h2>
+    
+    <form id="orderForm">
+        <div class="form-group">
+            <label for="gameId">Honor of Kings ID</label>
+            <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tokenAmount">တိုကင်ပမာဏ ရွေးချယ်ရန်</label>
+            <select id="tokenAmount" required>
+                <option value="240 + 48 Tokens - 9,648 MMK">240 + 48 Tokens - 9,648 MMK</option>
+                <option value="400 + 80 Tokens - 16,048 MMK">400 + 80 Tokens - 16,048 MMK</option>
+                <option value="560 + 112 Tokens - 22,448 MMK">560 + 112 Tokens - 22,448 MMK</option>
+                <option value="800 + 160 Tokens - 32,048 MMK">800 + 160 Tokens - 32,048 MMK</option>
+                <option value="1200 + 240 Tokens - 48,048 MMK">1,200 + 240 Tokens - 48,048 MMK</option>
+                <option value="2400 + 480 Tokens - 96,048 MMK">2,400 + 480 Tokens - 96,048 MMK</option>
+                <option value="4000 + 800 Tokens - 160,048 MMK">4,000 + 800 Tokens - 160,048 MMK</option>
+                <option value="8000 + 1600 Tokens - 320,048 MMK">8,000 + 1600 Tokens - 320,048 MMK</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="paymentMethod">ငွေပေးချေမည့်စနစ်</label>
+            <select id="paymentMethod" onchange="updatePaymentDetails()" required>
+                <option value="KBZ Pay">KBZ Pay</option>
+                <option value="Wave Pay">Wave Pay</option>
+            </select>
+            <div id="paymentDetails" class="payment-info">
+                📲 KBZ Pay: 09676544665 (BURME LAM)
+            </div>
+            
+            <div id="qrBox" class="qr-container">
+                <p style="color: #1e1b4b; margin: 0 0 5px 0; font-weight: bold; font-size: 14px;">Scan ဖတ်၍ Ngwe လွှဲနိုင်ပါသည်</p>
+                <img id="qrImg" class="qr-image" src="kpay-qr.png" alt="KBZ Pay QR Code">
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn">အော်ဒါတင်ပြီး ပြေစာပို့မည်</button>
+    </form>
+
+    <div class="c-service">
+        <p>အကူအညီလိုအပ်ပါက စာပို့ရန်</p>
+        <!-- စိတ်ချရသော Link စနစ်သို့ ပြောင်းထားပါသည် -->
+        <a href="https://t.me" target="_blank">💬 Contact Customer Service</a>
+    </div>
+</div>
+
+<script>
+    function updatePaymentDetails() {
+        const method = document.getElementById('paymentMethod').value;
+        const details = document.getElementById('paymentDetails');
+        const qrBox = document.getElementById('qrBox');
+        const qrImg = document.getElementById('qrImg');
+        
+        if(method === 'KBZ Pay') {
+            details.innerText = "📲 KBZ Pay: 09676544665 (BURME LAM)";
+            qrImg.src = "kpay-qr.png";
+            qrBox.style.display = "block";
+        } else {
+            details.innerText = "📲 Wave Pay: 09676544665 (BURME LAM)";
+            qrBox.style.display = "none";
+        }
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const gameId = document.getElementById('gameId').value;
+        const token = document.getElementById('tokenAmount').value;
+        const payment = document.getElementById('paymentMethod').value;
+
+        const textMessage = `🔔 BURME LAM TOKEN SHOP\nအော်ဒါအသစ်တင်လိုပါသည်\n\n🎮 Game ID: ${gameId}\n💎 တိုကင်: ${token}\n💵 Ngwe Pay: ${payment}`;
+        const encodedText = encodeURIComponent(textMessage);
+        
+        // 🌍 Error လုံးဝမတက်မည့် ကမ္ဘာသုံး Universal Link စနစ်အသစ်
+        const universalTelegramUrl = `https://t.me?text=${encodedText}`;
+        
+        window.location.href = universalTelegramUrl;
+    });
+</script>
+
+</body>
+</html>
+
