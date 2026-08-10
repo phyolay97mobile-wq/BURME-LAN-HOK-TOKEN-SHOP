@@ -78,7 +78,6 @@
 <body>
 
 <div class="container">
-    <!-- ဆိုင်နာမည် ပြောင်းလဲထားသောနေရာ -->
     <h2>BURME LAM TOKEN SHOP</h2>
     
     <form id="orderForm">
@@ -88,18 +87,22 @@
             <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
         </div>
 
-        <!-- တိုကင်ပမာဏ -->
+        <!-- အသစ်ပြင်ဆင်ထားသော တိုကင်ပမာဏနှင့် စျေးနှုန်းများ -->
         <div class="form-group">
             <label for="tokenAmount">တိုကင်ပမာဏ ရွေးချယ်ရန်</label>
             <select id="tokenAmount" required>
-                <option value="100 Tokens - 1,500 MMK">100 Tokens - 1,500 MMK</option>
-                <option value="250 Tokens - 3,500 MMK">250 Tokens - 3,500 MMK</option>
-                <option value="500 Tokens - 7,000 MMK">500 Tokens - 7,000 MMK</option>
-                <option value="1000 Tokens - 14,000 MMK">1,000 Tokens - 14,000 MMK</option>
+                <option value="240 + 48 Tokens - 9,648 MMK">240 + 48 Tokens - 9,648 MMK</option>
+                <option value="400 + 80 Tokens - 16,048 MMK">400 + 80 Tokens - 16,048 MMK</option>
+                <option value="560 + 112 Tokens - 22,448 MMK">560 + 112 Tokens - 22,448 MMK</option>
+                <option value="800 + 160 Tokens - 32,048 MMK">800 + 160 Tokens - 32,048 MMK</option>
+                <option value="1200 + 240 Tokens - 48,048 MMK">1,200 + 240 Tokens - 48,048 MMK</option>
+                <option value="2400 + 480 Tokens - 96,048 MMK">2,400 + 480 Tokens - 96,048 MMK</option>
+                <option value="4000 + 800 Tokens - 160,048 MMK">4,000 + 800 Tokens - 160,048 MMK</option>
+                <option value="8000 + 1600 Tokens - 320,048 MMK">8,000 + 1600 Tokens - 320,048 MMK</option>
             </select>
         </div>
 
-        <!-- Ngwe Pay Myu Sinit -->
+        <!-- ငွေပေးချေမှုစနစ် -->
         <div class="form-group">
             <label for="paymentMethod">ငွေပေးချေမည့်စနစ်</label>
             <select id="paymentMethod" onchange="updatePaymentDetails()" required>
@@ -140,7 +143,7 @@
         const payment = document.getElementById('paymentMethod').value;
 
         // Telegram သို့ ပို့မည့် စာသားပုံစံ ပြင်ဆင်ခြင်း
-        const textMessage = `🔔 BURME LAM TOKEN SHOP\nအော်ဒါအသစ်တင်လိုပါသည်\n\n🎮 Game ID: ${gameId}\n💎 တိုကင်: ${token}\n💵 ငွေလွှဲစနစ်: ${payment}`;
+        const textMessage = `🔔 **BURME LAM TOKEN SHOP**\nအော်ဒါအသစ်တင်လိုပါသည်\n\n🎮 Game ID: ${gameId}\n💎 တိုကင်: ${token}\n💵 ငွေလွှဲစနစ်: ${payment}`;
         
         const encodedText = encodeURIComponent(textMessage);
         const telegramUrl = `https://t.me?text=${encodedText}`;
@@ -151,4 +154,3 @@
 
 </body>
 </html>
-
