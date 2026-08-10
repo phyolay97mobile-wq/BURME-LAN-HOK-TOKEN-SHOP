@@ -110,13 +110,7 @@
             </div>
         </div>
 
-        <!-- Screenshot Upload -->
-        <div class="form-group">
-            <label for="screenshot">ငွေလွှဲပြေစာ (Screenshot)</label>
-            <input type="file" id="screenshot" accept="image/*" required>
-        </div>
-
-        <button type="submit" id="submitBtn">ဝယ်ယူမှုကို အတည်ပြုမည်</button>
+        <button type="submit" id="submitBtn">အော်ဒါတင်ပြီး ငွေလွှဲပြေစာပြမည်</button>
     </form>
 
     <!-- Customer Service -->
@@ -127,7 +121,6 @@
 </div>
 
 <script>
-    // ငွေလွှဲအကောင့် အချက်အလက်များ
     function updatePaymentDetails() {
         const method = document.getElementById('paymentMethod').value;
         const details = document.getElementById('paymentDetails');
@@ -138,7 +131,6 @@
         }
     }
 
-    // Telegram API သို့ ဒေတာလှမ်းပို့ခြင်း
     document.getElementById('orderForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -152,33 +144,37 @@
         const gameId = document.getElementById('gameId').value;
         const token = document.getElementById('tokenAmount').value;
         const payment = document.getElementById('paymentMethod').value;
-        const fileInput = document.getElementById('screenshot');
 
-        const message = `🔔 **HOK အော်ဒါအသစ် ရရှိပါသည်**\n\n🎮 Game ID: \`${gameId}\`\n💎 တိုကင်: ${token}\n💵 ငွေပေးချေမှုစနစ်: ${payment}`;
-
-        const formData = new FormData();
-        formData.append('chat_id', chatId);
-        formData.append('caption', message);
-        formData.append('parse_mode', 'Markdown');
-        formData.append('photo', fileInput.files[0]);
+        const message = `🔔 **HOK အော်ဒါအသစ် ရရှိပါသည်**\n\n🎮 Game ID: \`${gameId}\`\n💎 တိုကင်: ${token}\n💵 ငွေပေးချေမှုစနစ်: ${payment}\n\n⚠️ *ဝယ်သူသည် ငွေလွှဲပြေစာ ပေးပို့ရန်အတွက် သင့် Bot ဆီသို့ လာရောက်ပါလိမ့်မည်။*`;
 
         try {
-            const response = await fetch(`https://telegram.org{botToken}/sendPhoto`, {
+            // စာသားကို အရင်ပို့ခြင်း
+            const response = await fetch(`https://telegram.org{botToken}/sendMessage`, {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
             });
 
             if(response.ok) {
-                alert('အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်။ ခေတ္တစောင့်ဆိုင်းပေးပါရန်။');
+                alert('အော်ဒါအချက်အလက် ပို့ဆောင်ပြီးပါပြီ။ ငွေလွှဲပြေစာ (Screenshot) ပြသရန်အတွက် သင့်အား Telegram Bot ထံသို့ ခေါ်ဆောင်သွားပါမည်။');
                 document.getElementById('orderForm').reset();
                 updatePaymentDetails();
+                
+                // ဝယ်သူအား ပြေစာပြရန် Telegram Bot ဆီသို့ တိုက်ရိုက်ပို့ပေးခြင်း
+                window.location.href = "https://t.me";
             } else {
                 alert('အော်ဒါမအောင်မြင်ပါ။ သင့် Telegram Bot ထဲဝင်ပြီး /start ကို နှိပ်ထားပေးရန် လိုအပ်ပါသည်။');
             }
         } catch (error) {
             alert('အင်တာနက်လိုင်း မကောင်းသဖြင့် နောက်မှ ပြန်ကြိုးစားပါ။');
         } finally {
-            btn.innerText = "ဝယ်ယူမှုကို အတည်ပြုမည်";
+            btn.innerText = "အော်ဒါတင်ပြီး ငွေလွှဲပြေစာပြမည်";
             btn.disabled = false;
         }
     });
