@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOK Token Shop</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --dark: #1e1b4b;
+            --light: #312e81;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 450px;
+        }
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #4338ca;
+            background-color: #1e1b4b;
+            color: white;
+            box-sizing: border-box;
+        }
+        .payment-info {
+            background: #1e1b4b;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 5px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #f3f4f6;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            border: none;
+            color: #1e1b4b;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #d97706; }
+        .c-service {
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #4338ca;
+            padding-top: 15px;
+        }
+        .c-service a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>HOK Token Shop</h2>
+    
+    <form id="orderForm">
+        <!-- ဂိမ်း ID -->
+        <div class="form-group">
+            <label for="gameId">Honor of Kings ID</label>
+            <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
+        </div>
+
+        <!-- တိုကင်ပမာဏ -->
+        <div class="form-group">
+            <label for="tokenAmount">တိုကင်ပမာဏ ရွေးချယ်ရန်</label>
+            <select id="tokenAmount" required>
+                <option value="100 Tokens - 1,500 MMK">100 Tokens - 1,500 MMK</option>
+                <option value="250 Tokens - 3,500 MMK">250 Tokens - 3,500 MMK</option>
+                <option value="500 Tokens - 7,000 MMK">500 Tokens - 7,000 MMK</option>
+                <option value="1000 Tokens - 14,000 MMK">1,000 Tokens - 14,000 MMK</option>
+            </select>
+        </div>
+
+        <!-- ငွေပေးချေမှုစနစ် -->
+        <div class="form-group">
+            <label for="paymentMethod">ငွေပေးချေမည့်စနစ်</label>
+            <select id="paymentMethod" onchange="updatePaymentDetails()" required>
+                <option value="KBZ Pay">KBZ Pay</option>
+                <option value="Wave Pay">Wave Pay</option>
+            </select>
+            <div id="paymentDetails" class="payment-info">
+                📲 KBZ Pay: 09955141414 (BURME LAM)
+            </div>
+        </div>
+
+        <!-- Screenshot Upload -->
+        <div class="form-group">
+            <label for="screenshot">ငွေလွှဲပြေစာ (Screenshot)</label>
+            <input type="file" id="screenshot" accept="image/*" required>
+        </div>
+
+        <button type="submit" id="submitBtn">ဝယ်ယူမှုကို အတည်ပြုမည်</button>
+    </form>
+
+    <!-- Customer Service -->
+    <div class="c-service">
+        <p>အကူအညီလိုအပ်ပါက စာပို့ရန်</p>
+        <a href="https://t.me" target="_blank">💬 Contact Customer Service (Bot)</a>
+    </div>
+</div>
+
+<script>
+    // ငွေလွှဲအကောင့် အချက်အလက်များ
+    function updatePaymentDetails() {
+        const method = document.getElementById('paymentMethod').value;
+        const details = document.getElementById('paymentDetails');
+        if(method === 'KBZ Pay') {
+            details.innerText = "📲 KBZ Pay: 09955141414 (BURME LAM)";
+        } else {
+            details.innerText = "📲 Wave Pay: 09955141414 (BURME LAM)";
+        }
+    }
+
+    // Telegram API သို့ ဒေတာလှမ်းပို့ခြင်း
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "အော်ဒါတင်နေပါသည်...";
+        btn.disabled = true;
+
+        const botToken = "8852652191:AAFWqekvhiyjXBYJOPKpOPtrBzXUJCBvIvU"; 
+        const chatId = "8955141414"; 
+
+        const gameId = document.getElementById('gameId').value;
+        const token = document.getElementById('tokenAmount').value;
+        const payment = document.getElementById('paymentMethod').value;
+        const fileInput = document.getElementById('screenshot');
+
+        const message = `🔔 **HOK အော်ဒါအသစ် ရရှိပါသည်**\n\n🎮 Game ID: \`${gameId}\`\n💎 တိုကင်: ${token}\n💵 ငွေပေးချေမှုစနစ်: ${payment}`;
+
+        const formData = new FormData();
+        formData.append('chat_id', chatId);
+        formData.append('caption', message);
+        formData.append('parse_mode', 'Markdown');
+        formData.append('photo', fileInput.files[0]);
+
+        try {
+            const response = await fetch(`https://telegram.org{botToken}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if(response.ok) {
+                alert('အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်။ ခေတ္တစောင့်ဆိုင်းပေးပါရန်။');
+                document.getElementById('orderForm').reset();
+                updatePaymentDetails();
+            } else {
+                alert('အော်ဒါမအောင်မြင်ပါ။ သင့် Telegram Bot ထဲဝင်ပြီး /start ကို နှိပ်ထားပေးရန် လိုအပ်ပါသည်။');
+            }
+        } catch (error) {
+            alert('အင်တာနက်လိုင်း မကောင်းသဖြင့် နောက်မှ ပြန်ကြိုးစားပါ။');
+        } finally {
+            btn.innerText = "ဝယ်ယူမှုကို အတည်ပြုမည်";
+            btn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
