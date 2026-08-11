@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BURME LAM TOKEN SHOP</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --dark: #1e1b4b;
+            --light: #312e81;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 450px;
+        }
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #4338ca;
+            background-color: #1e1b4b;
+            color: white;
+            box-sizing: border-box;
+        }
+        .payment-info {
+            background: #1e1b4b;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 5px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #f3f4f6;
+        }
+        .qr-container {
+            text-align: center;
+            margin-top: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: block;
+        }
+        .qr-image {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+        }
+
+        /* Lucky Wheel Styles */
+        .wheel-box {
+            text-align: center;
+            margin: 20px 0;
+            background: #1e1b4b;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed var(--primary);
+        }
+        .wheel-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--primary);
+            background: conic-gradient(
+                #ef4444 0deg 60deg, 
+                #3b82f6 60deg 120deg, 
+                #10b981 120deg 180deg, 
+                #f59e0b 180deg 240deg, 
+                #8b5cf6 240deg 300deg, 
+                #ec4899 300deg 360deg
+            );
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        .arrow {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 25px solid #ffffff;
+            z-index: 10;
+        }
+        .result-text {
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 16px;
+            min-height: 22px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            border: none;
+            color: #1e1b4b;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #d97706; }
+        .c-service {
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #4338ca;
+            padding-top: 15px;
+        }
+        .c-service a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>BURME LAM TOKEN SHOP</h2>
+    
+    <form id="orderForm">
+        <!-- 🎯 ဤနေရာတွင် ဂိမ်း ID ကို အရင်ဖြည့်ရပါမည် -->
+        <div class="form-group">
+            <label for="gameId">Honor of Kings ID</label>
+            <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tokenAmount">တိုကင်ပမာဏ ရွေးချယ်ရန်</label>
+            <select id="tokenAmount" required>
+                <option value="240">240 + 48 Tokens - 9,648 MMK</option>
+                <option value="400">400 + 80 Tokens - 16,048 MMK</option>
+                <option value="560">560 + 112 Tokens - 22,448 MMK</option>
+                <option value="800">800 + 160 Tokens - 32,048 MMK</option>
+                <option value="1200">1,200 + 240 Tokens - 48,048 MMK</option>
+                <option value="2400">2,400 + 480 Tokens - 96,048 MMK</option>
+                <option value="4000">4,000 + 800 Tokens - 160,048 MMK</option>
+                <option value="8000">8,000 + 1600 Tokens - 320,048 MMK</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="paymentMethod">ငွေပေးချေမည့်စနစ်</label>
+            <select id="paymentMethod" onchange="updatePaymentDetails()" required>
+                <option value="KBZ Pay">KBZ Pay</option>
+                <option value="Wave Pay">Wave Pay</option>
+            </select>
+            <div id="paymentDetails" class="payment-info">
+                📲 KBZ Pay: 09676544665 (BURME LAM)
+            </div>
+            
+            <div id="qrBox" class="qr-container">
+                <p style="color: #1e1b4b; margin: 0 0 5px 0; font-weight: bold; font-size: 14px;">Scan ဖတ်၍ Ngwe လွှဲနိုင်ပါသည်</p>
+                <img id="qrImg" class="qr-image" src="kpay-qr.png" alt="KBZ Pay QR Code">
+            </div>
+        </div>
+
+        <!-- Lucky Wheel Section -->
+        <div class="wheel-box">
+            <label style="color: var(--primary);">🎁 အော်ဒါတင်ပြီး ကံစမ်းမဲလှည့်ပါ 🎁</label>
+            <p style="font-size: 12px; color: #a5b4fc; margin: 5px 0 15px 0;">(တိုကင်များများဝယ်လေ ဆုမဲပေါက်နိုင်ခြေ ပိုမိုမြင့်မားလေဖြစ်ပါသည်)</p>
+            <div class="wheel-wrapper">
+                <div class="arrow"></div>
+                <div id="wheel" class="wheel"></div>
+            </div>
+            <div id="resultText" class="result-text"></div>
+        </div>
+
+        <button type="submit" id="submitBtn">ကံစမ်းမဲဘီးလှည့်ပြီး အော်ဒါတင်မည်</button>
+    </form>
+
+    <div class="c-service">
+        <p>အကူအညီလိုအပ်ပါက စာပို့ရန်</p>
+        <a href="https://telegram.me" target="_blank">💬 Contact Customer Service</a>
+    </div>
+</div>
+
+<script>
+    function updatePaymentDetails() {
+        const method = document.getElementById('paymentMethod').value;
+        const details = document.getElementById('paymentDetails');
+        const qrBox = document.getElementById('qrBox');
+        const qrImg = document.getElementById('qrImg');
+        
+        if(method === 'KBZ Pay') {
+            details.innerText = "📲 KBZ Pay: 09676544665 (BURME LAM)";
+            qrImg.src = "kpay-qr.png";
+            qrBox.style.display = "block";
+        } else {
+            details.innerText = "📲 Wave Pay: 09676544665 (BURME LAM)";
+            qrBox.style.display = "none";
+        }
+    }
+
+    const prizes = [
+        "🎁 Try Again (နောက်တစ်ကြိမ် ပြန်လည်ကံစမ်းပါ)", 
+        "🎉 16 Tokens လက်ဆောင်", 
+        "🎉 32 Tokens လက်ဆောင်", 
+        "🎉 64 Tokens လက်ဆောင်", 
+        "🎉 126 Tokens လက်ဆောင်", 
+        "🎉 တစ်ပတ်စာ တိုကင်လက်ဆောင် (Weekly Pass)"
+    ];
+
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const wheel = document.getElementById('wheel');
+        const resultText = document.getElementById('resultText');
+
+        btn.disabled = true;
+        btn.innerText = "ကံစမ်းမဲဘီး လည်နေပါသည်...";
+        resultText.innerText = "🎰 ကံစမ်းမဲ ရလဒ်ကို စောင့်ဆိုင်းနေပါသည်...";
+
+        const selectElement = document.getElementById('tokenAmount');
+        const tokenValue = parseInt(selectElement.value);
+        const tokenText = selectElement.options[selectElement.selectedIndex].text;
+
+        const chance = Math.random() * 100;
+        let targetSector = 0; 
+
+        if (tokenValue === 240 || tokenValue === 400) {
+            if (chance >= 95) targetSector = Math.floor(Math.random() * 5) + 1;
+        } 
+        else if (tokenValue === 560 || tokenValue === 800 || tokenValue === 1200) {
+            if (chance >= 80) targetSector = Math.floor(Math.random() * 5) + 1;
+        } 
+        else if (tokenValue === 2400 || tokenValue === 4000 || tokenValue === 8000) {
+            if (chance >= 50) targetSector = Math.floor(Math.random() * 5) + 1;
+        }
+
+        const sectorCenterDegree = 30 + (targetSector * 60);
+        const finalRotationDegrees = 1800 + (360 - sectorCenterDegree);
+        
+        wheel.style.transform = `rotate(${finalRotationDegrees}deg)`;
+
+        setTimeout(() => {
+            const finalPrize = prizes[targetSector];
+            resultText.innerText = `Result: ${finalPrize}`;
+            btn.innerText = "Telegram သို့ ပို့ဆောင်နေပါသည်...";
+
+            const gameId = document.getElementById('gameId').value;
+            const payment = document.getElementById('paymentMethod').value;
+
+            // 🛠 ဤနေရာတွင် စာသားပို့စနစ်ကို TikTok Browser နှင့် ကွက်တိကိုက်ညီအောင် လုံးဝပြင်ဆင်ထားပါသည်
+            const textMessage = `🔔 BURME LAM TOKEN SHOP\nအော်ဒါအသစ်တင်လိုပါသည်\n\n🎮 Game ID: ${gameId}\n💎 ဝယ်ယူသည့်ပမာဏ: ${tokenText}\n💵 ငွေလွှဲစနစ်: ${payment}\n🎁 ကံစမ်းမဲရလဒ်: ${finalPrize}`;
+            const encodedText = encodeURIComponent(textMessage);
+
