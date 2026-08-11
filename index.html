@@ -62,6 +62,57 @@
             height: 180px;
             object-fit: contain;
         }
+
+        /* Lucky Wheel Styles */
+        .wheel-box {
+            text-align: center;
+            margin: 20px 0;
+            background: #1e1b4b;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed var(--primary);
+        }
+        .wheel-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--primary);
+            background: conic-gradient(
+                #ef4444 0deg 60deg, 
+                #3b82f6 60deg 120deg, 
+                #10b981 120deg 180deg, 
+                #f59e0b 180deg 240deg, 
+                #8b5cf6 240deg 300deg, 
+                #ec4899 300deg 360deg
+            );
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        .arrow {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 25px solid #ffffff;
+            z-index: 10;
+        }
+        .result-text {
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 16px;
+            min-height: 22px;
+        }
+
         button {
             width: 100%;
             padding: 12px;
@@ -95,13 +146,11 @@
     <h2>BURME LAM TOKEN SHOP</h2>
     
     <form id="orderForm">
-        <!-- ဂိမ်း ID -->
         <div class="form-group">
             <label for="gameId">Honor of Kings ID</label>
             <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
         </div>
 
-        <!-- တိုကင်ပမာဏနှင့် စျေးနှုန်းများ -->
         <div class="form-group">
             <label for="tokenAmount">တိုကင်ပမာဏ ရွေးချယ်ရန်</label>
             <select id="tokenAmount" required>
@@ -116,7 +165,6 @@
             </select>
         </div>
 
-        <!-- ငွေပေးချေမှုစနစ် -->
         <div class="form-group">
             <label for="paymentMethod">ငွေပေးချေမည့်စနစ်</label>
             <select id="paymentMethod" onchange="updatePaymentDetails()" required>
@@ -124,23 +172,32 @@
                 <option value="Wave Pay">Wave Pay</option>
             </select>
             <div id="paymentDetails" class="payment-info">
-                📲 KBZ Pay: 09676544665 (BURME LAM)
+                📲 KBZ Pay: 09955141414 (BURME LAM)
             </div>
             
-            <!-- QR Code ပြသမည့်နေရာ -->
             <div id="qrBox" class="qr-container">
-                <p style="color: #1e1b4b; margin: 0 0 5px 0; font-weight: bold; font-size: 14px;">Scan ဖတ်၍ ငွေလွှဲနိုင်ပါသည်</p>
+                <p style="color: #1e1b4b; margin: 0 0 5px 0; font-weight: bold; font-size: 14px;">Scan ဖတ်၍ Ngwe လွှဲနိုင်ပါသည်</p>
                 <img id="qrImg" class="qr-image" src="kpay-qr.png" alt="KBZ Pay QR Code">
             </div>
         </div>
 
-        <button type="submit" id="submitBtn">အော်ဒါတင်ပြီး ပြေစာပို့မည်</button>
+        <!-- Lucky Wheel Section -->
+        <div class="wheel-box">
+            <label style="color: var(--primary);">🎁 အော်ဒါတင်ပြီး ကံစမ်းမဲလှည့်ပါ 🎁</label>
+            <p style="font-size: 12px; color: #a5b4fc; margin: 5px 0 15px 0;">(Tokens ဆုမဲများနှင့် အထူးလက်ဆောင်များ စက္ကန့်ပိုင်းအတွင်း ကံစမ်းနိုင်ခွင့်)</p>
+            <div class="wheel-wrapper">
+                <div class="arrow"></div>
+                <div id="wheel" class="wheel"></div>
+            </div>
+            <div id="resultText" class="result-text"></div>
+        </div>
+
+        <button type="submit" id="submitBtn">ကံစမ်းမဲဘီးလှည့်ပြီး အော်ဒါတင်မည်</button>
     </form>
 
-    <!-- Customer Service -->
     <div class="c-service">
         <p>အကူအညီလိုအပ်ပါက စာပို့ရန်</p>
-        <a href="tg://resolve?domain=hok_token_pay_bot" target="_blank">💬 Contact Customer Service</a>
+        <a href="https://telegram.me" target="_blank">💬 Contact Customer Service</a>
     </div>
 </div>
 
@@ -152,30 +209,58 @@
         const qrImg = document.getElementById('qrImg');
         
         if(method === 'KBZ Pay') {
-            details.innerText = "📲 KBZ Pay: 09676544665 (BURME LAM)";
+            details.innerText = "📲 KBZ Pay: 09955141414 (BURME LAM)";
             qrImg.src = "kpay-qr.png";
-            qrBox.style.display = "block"; // KBZ Pay ဆိုရင် QR ပုံပြမယ်
+            qrBox.style.display = "block";
         } else {
-            details.innerText = "📲 Wave Pay: 09676544665 (BURME LAM)";
-            qrBox.style.display = "none";  // Wave Pay ဆိုရင် QR ပုံ ခဏဖျောက်ထားမယ်
+            details.innerText = "📲 Wave Pay: 09955141414 (BURME LAM)";
+            qrBox.style.display = "none";
         }
     }
+
+    // ဆုမဲများ (Wheel ပေါ်ရှိ အကွက်များအတိုင်း စီစဉ်ထားသည်)
+    // index 0 = 0 to 60 deg, index 1 = 61 to 120 deg စသဖြင့်
+    const prizes = [
+        "🎁 Try Again (နောက်တစ်ကြိမ် ပြန်လည်ကံစမ်းပါ)", // Red 
+        "🎉 16 Tokens လက်ဆောင်",                         // Blue
+        "🎉 32 Tokens လက်ဆောင်",                         // Green
+        "🎉 64 Tokens လက်ဆောင်",                         // Yellow
+        "🎉 126 Tokens လက်ဆောင်",                        // Purple
+        "🎉 တစ်ပတ်စာ တိုကင်လက်ဆောင် (Weekly Pass)"       // Pink
+    ];
 
     document.getElementById('orderForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const gameId = document.getElementById('gameId').value;
-        const token = document.getElementById('tokenAmount').value;
-        const payment = document.getElementById('paymentMethod').value;
+        const btn = document.getElementById('submitBtn');
+        const wheel = document.getElementById('wheel');
+        const resultText = document.getElementById('resultText');
 
-        const textMessage = `🔔 BURME LAM TOKEN SHOP\nအော်ဒါအသစ်တင်လိုပါသည်\n\n🎮 Game ID: ${gameId}\n💎 တိုကင်: ${token}\n💵 Ngwe Pay: ${payment}`;
-        const encodedText = encodeURIComponent(textMessage);
-        const telegramAppUrl = `tg://resolve?domain=hok_token_pay_bot&text=${encodedText}`;
+        btn.disabled = true;
+        btn.innerText = "ကံစမ်းမဲဘီး လည်နေပါသည်...";
+        resultText.innerText = "🎰 ကံစမ်းမဲ ရလဒ်ကို စောင့်ဆိုင်းနေပါသည်...";
+
+        // 🎯 90% Probability Logic (၉၀ ရာခိုင်နှုန်း "နောက်တစ်ကြိမ်ကံစမ်းပါ" ပေါက်စေမည့် စနစ်)
+        const chance = Math.random() * 100;
+        let targetSector = 0; // Default အနေဖြင့် index 0 (Try Again) ဟု သတ်မှတ်သည်
+
+        if (chance >= 90) {
+            // ကျန်ရှိသော ၁၀ ရာခိုင်နှုန်းကိုမှ အခြားဆုမဲ ၅ ခုအနက် တစ်ခုခုကို ကျပန်း (Random) ပေါက်စေသည်
+            targetSector = Math.floor(Math.random() * 5) + 1;
+        }
+
+        // သတ်မှတ်ထားသော ဆုမဲအကွက်ထဲသို့ ကွက်တိကျရောက်စေမည့် ဒီဂရီကို တွက်ချက်ခြင်း (တစ်ကွက်လျှင် ၆၀ ဒီဂရီ ရှိပါသည်)
+        // ဘီးကို အနည်းဆုံး ၅ ပတ် (၁၈၀၀ ဒီဂရီ) အထက် လည်ပတ်စေပါမည်
+        const sectorCenterDegree = 30 + (targetSector * 60);
+        const finalRotationDegrees = 1800 + (360 - sectorCenterDegree);
         
-        window.location.href = telegramAppUrl;
-    });
-</script>
+        wheel.style.transform = `rotate(${finalRotationDegrees}deg)`;
 
-</body>
-</html>
+        // ၄ စက္ကန့်အကြာ ဘီးလည်ပြီး ရပ်သွားချိန်တွင် အလုပ်လုပ်မည့်စနစ်
+        setTimeout(() => {
+            const finalPrize = prizes[targetSector];
+            resultText.innerText = `Result: ${finalPrize}`;
+            btn.innerText = "Telegram သို့ ပို့ဆောင်နေပါသည်...";
 
+            const gameId = document.getElementById('gameId').value;
+            const token = document.getElementById('tokenAmount').value;
