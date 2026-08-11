@@ -145,8 +145,7 @@
 <div class="container">
     <h2>BURME LAM TOKEN SHOP</h2>
     
-    <form id="orderForm">
-        <!-- 🎯 ဤနေရာတွင် ဂိမ်း ID ကို အရင်ဖြည့်ရပါမည် -->
+    <form id="orderForm" onsubmit="return false;">
         <div class="form-group">
             <label for="gameId">Honor of Kings ID</label>
             <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
@@ -173,7 +172,7 @@
                 <option value="Wave Pay">Wave Pay</option>
             </select>
             <div id="paymentDetails" class="payment-info">
-                📲 KBZ Pay: 09676544665 (BURME LAM)
+                📲 KBZ Pay: 09955141414 (BURME LAM)
             </div>
             
             <div id="qrBox" class="qr-container">
@@ -193,7 +192,7 @@
             <div id="resultText" class="result-text"></div>
         </div>
 
-        <button type="submit" id="submitBtn">ကံစမ်းမဲဘီးလှည့်ပြီး အော်ဒါတင်မည်</button>
+        <button type="button" id="submitBtn" onclick="startLuckyWheel()">ကံစမ်းမဲဘီးလှည့်ပြီး အော်ဒါတင်မည်</button>
     </form>
 
     <div class="c-service">
@@ -210,11 +209,11 @@
         const qrImg = document.getElementById('qrImg');
         
         if(method === 'KBZ Pay') {
-            details.innerText = "📲 KBZ Pay: 09676544665 (BURME LAM)";
+            details.innerText = "📲 KBZ Pay: 09955141414 (BURME LAM)";
             qrImg.src = "kpay-qr.png";
             qrBox.style.display = "block";
         } else {
-            details.innerText = "📲 Wave Pay: 09676544665 (BURME LAM)";
+            details.innerText = "📲 Wave Pay: 09955141414 (BURME LAM)";
             qrBox.style.display = "none";
         }
     }
@@ -228,12 +227,18 @@
         "🎉 တစ်ပတ်စာ တိုကင်လက်ဆောင် (Weekly Pass)"
     ];
 
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
+    function startLuckyWheel() {
+        const gameIdInput = document.getElementById('gameId');
         const btn = document.getElementById('submitBtn');
         const wheel = document.getElementById('wheel');
         const resultText = document.getElementById('resultText');
+
+        // ဂိမ်း ID မဖြည့်ထားပါက သတိပေးရန်
+        if (!gameIdInput.value.trim()) {
+            alert("ကျေးဇူးပြု၍ Honor of Kings ID ကို အရင်ရိုက်ထည့်ပေးပါခင်ဗျာ။");
+            gameIdInput.focus();
+            return;
+        }
 
         btn.disabled = true;
         btn.innerText = "ကံစမ်းမဲဘီး လည်နေပါသည်...";
@@ -256,6 +261,7 @@
             if (chance >= 50) targetSector = Math.floor(Math.random() * 5) + 1;
         }
 
+        // စာမျက်နှာ Refresh လုံးဝမဖြစ်စေဘဲ ကွက်တိလည်ပတ်မည့်စနစ်
         const sectorCenterDegree = 30 + (targetSector * 60);
         const finalRotationDegrees = 1800 + (360 - sectorCenterDegree);
         
@@ -266,10 +272,7 @@
             resultText.innerText = `Result: ${finalPrize}`;
             btn.innerText = "Telegram သို့ ပို့ဆောင်နေပါသည်...";
 
-            const gameId = document.getElementById('gameId').value;
+            const gameId = gameIdInput.value;
             const payment = document.getElementById('paymentMethod').value;
 
-            // 🛠 ဤနေရာတွင် စာသားပို့စနစ်ကို TikTok Browser နှင့် ကွက်တိကိုက်ညီအောင် လုံးဝပြင်ဆင်ထားပါသည်
-            const textMessage = `🔔 BURME LAM TOKEN SHOP\nအော်ဒါအသစ်တင်လိုပါသည်\n\n🎮 Game ID: ${gameId}\n💎 ဝယ်ယူသည့်ပမာဏ: ${tokenText}\n💵 ငွေလွှဲစနစ်: ${payment}\n🎁 ကံစမ်းမဲရလဒ်: ${finalPrize}`;
-            const encodedText = encodeURIComponent(textMessage);
-
+            // ဒေတာများကို ပေါင်းစပ်၍ လုံုံခြုံစွာ စာသားပြောင်းလဲခြင်း
