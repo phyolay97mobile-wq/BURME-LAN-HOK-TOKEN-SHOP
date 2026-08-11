@@ -26,32 +26,37 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             width: 100%;
             max-width: 450px;
-        }
-        h2 { text-align: center; color: var(--primary); margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #4338ca;
-            background-color: #1e1b4b;
-            color: white;
             box-sizing: border-box;
         }
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        .form-group { margin-bottom: 20px; display: block; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #f3f4f6; }
+        
+        input[type="text"], select {
+            width: 100% !important;
+            padding: 12px !important;
+            border-radius: 8px !important;
+            border: 2px solid #4338ca !important;
+            background-color: #1e1b4b !important;
+            color: white !important;
+            box-sizing: border-box !important;
+            font-size: 15px !important;
+            display: block !important;
+        }
+        
         .payment-info {
             background: #1e1b4b;
             padding: 12px;
             border-radius: 8px;
             border-left: 4px solid var(--primary);
-            margin-top: 5px;
+            margin-top: 8px;
             font-size: 15px;
             font-weight: 500;
             color: #f3f4f6;
         }
         .qr-container {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             background-color: white;
             padding: 10px;
             border-radius: 8px;
@@ -66,7 +71,7 @@
         /* Lucky Wheel Styles */
         .wheel-box {
             text-align: center;
-            margin: 20px 0;
+            margin: 25px 0;
             background: #1e1b4b;
             padding: 15px;
             border-radius: 10px;
@@ -76,7 +81,7 @@
             position: relative;
             width: 200px;
             height: 200px;
-            margin: 0 auto;
+            margin: 15px auto;
         }
         .wheel {
             width: 100%;
@@ -113,9 +118,10 @@
             min-height: 22px;
         }
 
-        button {
+        /* Submit Button Style */
+        .submit-btn {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: var(--primary);
             border: none;
             color: #1e1b4b;
@@ -125,10 +131,11 @@
             cursor: pointer;
             transition: 0.3s;
             margin-top: 10px;
+            display: block;
         }
-        button:hover { background-color: #d97706; }
+        .submit-btn:hover { background-color: #d97706; }
         .c-service {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: center;
             border-top: 1px solid #4338ca;
             padding-top: 15px;
@@ -145,7 +152,8 @@
 <div class="container">
     <h2>BURME LAM TOKEN SHOP</h2>
     
-    <form id="orderForm" onsubmit="return false;">
+    <!-- Form trigger အမှားများကို ရှင်းလင်းထားပါသည် -->
+    <form id="orderForm" action="#" onsubmit="event.preventDefault(); startLuckyWheel(); return false;">
         <div class="form-group">
             <label for="gameId">Honor of Kings ID</label>
             <input type="text" id="gameId" placeholder="ဂိမ်း ID ရိုက်ထည့်ပါ" required>
@@ -183,7 +191,7 @@
 
         <!-- Lucky Wheel Section -->
         <div class="wheel-box">
-            <label style="color: var(--primary);">🎁 အော်ဒါတင်ပြီး ကံစမ်းမဲလှည့်ပါ 🎁</label>
+            <label style="color: var(--primary); font-weight: bold;">🎁 အော်ဒါတင်ပြီး ကံစမ်းမဲလှည့်ပါ 🎁</label>
             <p style="font-size: 12px; color: #a5b4fc; margin: 5px 0 15px 0;">(တိုကင်များများဝယ်လေ ဆုမဲပေါက်နိုင်ခြေ ပိုမိုမြင့်မားလေဖြစ်ပါသည်)</p>
             <div class="wheel-wrapper">
                 <div class="arrow"></div>
@@ -192,7 +200,8 @@
             <div id="resultText" class="result-text"></div>
         </div>
 
-        <button type="button" id="submitBtn" onclick="startLuckyWheel()">ကံစမ်းမဲဘီးလှည့်ပြီး အော်ဒါတင်မည်</button>
+        <!-- ခလုတ်အား မဖြစ်မနေ အလုပ်လုပ်မည့် စနစ်သို့ ပြောင်းလဲထားပါသည် -->
+        <button type="submit" id="submitBtn" class="submit-btn">ကံစမ်းမဲဘီးလှည့်ပြီး အော်ဒါတင်မည်</button>
     </form>
 
     <div class="c-service">
@@ -233,7 +242,6 @@
         const wheel = document.getElementById('wheel');
         const resultText = document.getElementById('resultText');
 
-        // ဂိမ်း ID မဖြည့်ထားပါက သတိပေးရန်
         if (!gameIdInput.value.trim()) {
             alert("ကျေးဇူးပြု၍ Honor of Kings ID ကို အရင်ရိုက်ထည့်ပေးပါခင်ဗျာ။");
             gameIdInput.focus();
@@ -261,18 +269,10 @@
             if (chance >= 50) targetSector = Math.floor(Math.random() * 5) + 1;
         }
 
-        // စာမျက်နှာ Refresh လုံးဝမဖြစ်စေဘဲ ကွက်တိလည်ပတ်မည့်စနစ်
         const sectorCenterDegree = 30 + (targetSector * 60);
         const finalRotationDegrees = 1800 + (360 - sectorCenterDegree);
         
         wheel.style.transform = `rotate(${finalRotationDegrees}deg)`;
 
         setTimeout(() => {
-            const finalPrize = prizes[targetSector];
-            resultText.innerText = `Result: ${finalPrize}`;
-            btn.innerText = "Telegram သို့ ပို့ဆောင်နေပါသည်...";
 
-            const gameId = gameIdInput.value;
-            const payment = document.getElementById('paymentMethod').value;
-
-            // ဒေတာများကို ပေါင်းစပ်၍ လုံုံခြုံစွာ စာသားပြောင်းလဲခြင်း
